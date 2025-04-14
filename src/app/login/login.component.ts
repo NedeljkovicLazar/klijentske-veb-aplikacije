@@ -1,9 +1,11 @@
 import { Component } from '@angular/core';
-import {MatInputModule} from '@angular/material/input';
-import {MatFormFieldModule} from '@angular/material/form-field';
-import {FormsModule} from '@angular/forms';
+import { MatInputModule } from '@angular/material/input';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { FormsModule } from '@angular/forms';
 import { MatCardModule } from '@angular/material/card';
 import { MatButtonModule } from '@angular/material/button';
+import { UserService } from '../../services/user.services';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-login',
@@ -16,15 +18,19 @@ export class LoginComponent {
   public email: string = ''
   public password: string = ''
 
-  public updateEmail(e: any) {
-    this.email = e.target.value
+  constructor(private router: Router) {
+    if (UserService.getActiveUser()) {
+      router.navigate(['/user'])
+    }
   }
 
-  public updatePassword(e: any) {
-    this.password = e.target.value
-  }
+  public doLogin() {
+    if (UserService.login(this.email, this.password)) {
+      //Redirect to user profile
+      this.router.navigate(['/user'])
+      return
+    }
 
-  public doLogin(){
-    alert('Not implemented yet')
+    alert('Bad email or password')
   }
 }
